@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medication List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .delete {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Medication List</h1>
+    <form id="medication-form">
+        <label for="medication-input">Medication Name:</label>
+        <input type="text" id="medication-input" required>
+        <label for="expiry-date-input">Expiry Date:</label>
+        <input type="date" id="expiry-date-input" required>
+        <button type="submit">Add Medication</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Medication</th>
+                <th>Expiry Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="medication-list">
+        </tbody>
+    </table>
+
+    <button id="export-xml">Export to XML</button>
+    <input type="file" id="import-xml" accept=".xml">
+
+    <script src="script.js"></script>
+</body>
+</html>
