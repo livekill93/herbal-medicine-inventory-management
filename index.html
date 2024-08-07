@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medication List</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        .delete {
-            cursor: pointer;
-        }
-    </style>
+    <title>한방병원 약제실 재고</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Medication List</h1>
-    <form id="medication-form">
-        <label for="medication-input">Medication Name:</label>
-        <input type="text" id="medication-input" required>
-        <label for="expiry-date-input">Expiry Date:</label>
-        <input type="date" id="expiry-date-input" required>
-        <button type="submit">Add Medication</button>
-    </form>
+    <div class="container">
+        <h1>약제 리스트</h1>
+        <form id="medication-form">
+            <label for="medication-input">약재명을 기입해주세요:</label>
+            <input type="text" id="medication-input" required>
+            <label for="expiry-date-input">유통 기한을 기입해 주세요:</label>
+            <input type="date" id="expiry-date-input" required>
+            <label for="quantity-input">개수를 기입해 주세요:</label>
+            <input type="number" id="quantity-input" required min="1">
+            <button type="submit" class="btn">리스트에 추가합니다.</button>
+            <p>유통기한 1개월 전은 <span class="warning">노란색</span>, 1주일 전은 <span class="danger">붉은색</span>, 지난 것은 <span class="expired">회색</span>으로 표시합니다.</p>
+        </form>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Medication</th>
-                <th>Expiry Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="medication-list">
-        </tbody>
-    </table>
+        <div id="medications-container">
+            <h2>유통기한이 남은 약재들</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>약재명</th>
+                        <th>유통 기한</th>
+                        <th>개수</th>
+                        <th>처리</th>
+                    </tr>
+                </thead>
+                <tbody id="medication-list">
+                </tbody>
+            </table>
+        </div>
 
-    <button id="export-xml">Export to XML</button>
-    <input type="file" id="import-xml" accept=".xml">
+        <div id="expired-medications-container">
+            <h2>유통기한이 지난 약재들</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>약재명</th>
+                        <th>유통 기한</th>
+                        <th>개수</th>
+                        <th>처리</th>
+                    </tr>
+                </thead>
+                <tbody id="expired-medication-list">
+                </tbody>
+            </table>
+        </div>
+
+        <button id="export-xml" class="btn">파일로 추출합니다.(XML파일로 저장)</button>
+        <input type="file" id="import-xml" accept=".xml" class="btn">
+    </div>
 
     <script src="script.js"></script>
 </body>
