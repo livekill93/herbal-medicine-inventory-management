@@ -1,5 +1,4 @@
 /* Existing CSS with added table styling */
-
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -17,6 +16,8 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     width: 600px;
     text-align: center;
+    max-height: 90vh; /* Adjust to ensure container doesn't exceed viewport height */
+    overflow: auto;   /* Allow scrolling if content overflows */
 }
 
 h1 {
@@ -29,7 +30,8 @@ form {
 }
 
 input[type="text"],
-input[type="date"] {
+input[type="date"],
+input[type="number"] {
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -49,8 +51,10 @@ button:hover {
     background: #218838;
 }
 
-#medications-container {
+#medications-container, #expired-medications-container {
     margin-top: 20px;
+    max-height: 300px; /* Set a max-height for the scrollable area */
+    overflow-y: auto;  /* Enable vertical scrolling */
 }
 
 table {
@@ -72,4 +76,21 @@ th {
 td .delete {
     color: #ff0000;
     cursor: pointer;
+}
+
+td .quantity-input {
+    width: 50px;
+}
+
+td .save-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+td .save-button:hover {
+    background: #0056b3;
 }
