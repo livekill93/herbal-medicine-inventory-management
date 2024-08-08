@@ -1,4 +1,4 @@
-/* Existing CSS with added table styling */
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -20,13 +20,16 @@ body {
     overflow: auto;   /* Allow scrolling if content overflows */
 }
 
+/* Header Styles */
 h1 {
     margin-bottom: 20px;
 }
 
+/* Form Styles */
 form {
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
 }
 
 input[type="text"],
@@ -51,7 +54,28 @@ button:hover {
     background: #218838;
 }
 
-#medications-container, #expired-medications-container {
+/* Filter and Clear All Button Styles */
+#filter-form {
+    margin-bottom: 20px;
+}
+
+#filter-form label,
+#filter-form select,
+#filter-form button {
+    margin-bottom: 10px;
+}
+
+#clear-all {
+    background: #dc3545;
+}
+
+#clear-all:hover {
+    background: #c82333;
+}
+
+/* Table Styles */
+#medications-container, 
+#expired-medications-container {
     margin-top: 20px;
     max-height: 300px; /* Set a max-height for the scrollable area */
     overflow-y: auto;  /* Enable vertical scrolling */
@@ -93,4 +117,26 @@ td .save-button {
 
 td .save-button:hover {
     background: #0056b3;
+}
+
+/* Warning and Danger Classes */
+.warning {
+    color: yellow;
+}
+
+.danger {
+    color: red;
+}
+
+.expired {
+    color: gray;
+}
+
+/* Print Button Styles */
+#print-list {
+    background: #17a2b8;
+}
+
+#print-list:hover {
+    background: #138496;
 }
