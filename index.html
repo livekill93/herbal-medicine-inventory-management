@@ -20,17 +20,18 @@
             <p>유통기한 1개월 전은 <span class="warning">노란색</span>, 1주일 전은 <span class="danger">붉은색</span>, 지난 것은 <span class="expired">회색</span>으로 표시합니다.</p>
         </form>
 
-        <form id="filter-form">
+        <div id="filter-form">
             <label for="filter-sort">정렬 기준:</label>
             <select id="filter-sort">
-                <option value="">정렬 기준 선택</option>
                 <option value="name">이름순</option>
-                <option value="expiryDate">유효기간순</option>
+                <option value="expiryDate">유통기한순</option>
             </select>
-            <button type="submit" class="btn">적용</button>
-        </form>
-
-        <button id="clear-all" class="btn">전체 삭제</button>
+            <button id="apply-filter" class="btn">적용</button>
+            <button id="print-list" class="btn">인쇄하기</button>
+            <button id="import-button" class="btn">XML 파일 불러오기</button>
+            <input type="file" id="import-xml" accept=".xml" class="btn" style="display:none;">
+            <button id="export-xml" class="btn">파일로 추출합니다.(XML파일로 저장)</button>
+        </div>
 
         <div id="medications-container">
             <h2>유통기한이 남은 약재들</h2>
@@ -40,7 +41,9 @@
                         <th>약재명</th>
                         <th>유통 기한</th>
                         <th>개수</th>
-                        <th>처리</th>
+                        <th>
+                            <button id="clear-all" class="btn">전체 삭제</button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="medication-list">
@@ -56,17 +59,15 @@
                         <th>약재명</th>
                         <th>유통 기한</th>
                         <th>개수</th>
-                        <th>처리</th>
+                        <th>
+                            <button id="clear-expired" class="btn">전체 삭제</button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="expired-medication-list">
                 </tbody>
             </table>
         </div>
-
-        <button id="print-list" class="btn">리스트 인쇄</button>
-        <button id="export-xml" class="btn">파일로 추출합니다.(XML파일로 저장)</button>
-        <input type="file" id="import-xml" accept=".xml" class="btn">
     </div>
 
     <script src="script.js"></script>
