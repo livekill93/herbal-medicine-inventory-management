@@ -7,10 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const expiredMedicationTableBody = document.getElementById('expired-medication-list');
     const exportButton = document.getElementById('export-xml');
     const importInput = document.getElementById('import-xml');
-    const filterForm = document.getElementById('filter-form');
+    const importButton = document.getElementById('import-button');
     const filterSortSelect = document.getElementById('filter-sort');
+    const applyFilterButton = document.getElementById('apply-filter');
     const printButton = document.getElementById('print-list');
     const clearAllButton = document.getElementById('clear-all');
+    const clearExpiredButton = document.getElementById('clear-expired');
 
     // Load medications from local storage
     loadMedications();
@@ -32,15 +34,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const medicationData = { medication, expiryDate, quantity };
         
         // Save to local storage
-        saveMedication(medicationData);
+        saveMedication(medication, expiryDate, quantity);
 
         // Render updated list
         renderMedications();
     }
 
-    function saveMedication(medicationData) {
+    function saveMedication(medication, expiryDate, quantity) {
         let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        medications.push(medicationData);
+        medications.push({ medication, expiryDate, quantity });
         localStorage.setItem('medications', JSON.stringify(medications));
     }
 
@@ -50,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function removeMedication(medication, expiryDate, quantity) {
         let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        medications = medications.filter(m => !(m.medication === medication && m.expiryDate === expiryDate && m.quantity === quantity));
+        medications = medications.filter(m => m.medication !== medication || m.expiryDate !== expiryDate || m.quantity !== quantity);
         localStorage.setItem('medications', JSON.stringify(medications));
         renderMedications(); // Re-render list after removal
     }
@@ -73,13 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeDifference = expiryDateObj - now;
 
         if (timeDifference < 0) {
-            return 'expired'; // Expired
+            return 'gray'; // Expired
         } else if (timeDifference <= oneWeekInMillis) {
-            return 'danger'; // One week or less
+            return 'red'; // One week or less
         } else if (timeDifference <= oneMonthInMillis) {
-            return 'warning'; // One month or less
+            return 'yellow'; // One month or less
         } else {
-            return ''; // More than one month
+            return 'black'; // More than one month
         }
     }
 
@@ -88,26 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
         expiredMedicationTableBody.innerHTML = ''; // Clear existing rows
 
         let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        const sortValue = filterSortSelect.value;
-        
-        if (sortValue === 'name') {
+        // Sort based on the selected filter
+        const sortBy = filterSortSelect.value;
+        if (sortBy === 'name') {
             medications.sort((a, b) => a.medication.localeCompare(b.medication));
-        } else if (sortValue === 'expiryDate') {
+        } else if (sortBy === 'expiryDate') {
             medications.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate));
         }
 
         medications.forEach(({ medication, expiryDate, quantity }) => {
             const row = document.createElement('tr');
-            const colorClass = getColorForExpiryDate(expiryDate);
-            row.classList.add(colorClass);
+            const color = getColorForExpiryDate(expiryDate);
             row.innerHTML = `
-                <td>${medication}</td>
-                <td>${expiryDate}</td>
+                <td style="color: ${color};">${medication}</td>
+                <td style="color: ${color};">${expiryDate}</td>
                 <td>
                     <input type="number" class="quantity-input" value="${quantity}" min="1">
                     <button class="save-button">저장</button>
                 </td>
-                <td><span class="delete">삭제</span></td>
+                <td>
+                    <span class="delete">삭제</span>
+                </td>
             `;
 
             row.querySelector('.delete').addEventListener('click', () => {
@@ -119,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateMedicationQuantity(medication, expiryDate, newQuantity);
             });
 
-            if (colorClass === 'expired') {
+            if (color === 'gray') {
                 expiredMedicationTableBody.appendChild(row);
             } else {
                 medicationTableBody.appendChild(row);
@@ -139,6 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
     });
 
+    importButton.addEventListener('click', () => {
+        importInput.click(); // Trigger file input click
+    });
+
     importInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -151,6 +158,26 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsText(file);
         }
+    });
+
+    clearAllButton.addEventListener('click', () => {
+        localStorage.removeItem('medications');
+        renderMedications();
+    });
+
+    clearExpiredButton.addEventListener('click', () => {
+        let medications = JSON.parse(localStorage.getItem('medications')) || [];
+        medications = medications.filter(m => new Date(m.expiryDate) >= new Date());
+        localStorage.setItem('medications', JSON.stringify(medications));
+        renderMedications();
+    });
+
+    printButton.addEventListener('click', () => {
+        window.print();
+    });
+
+    applyFilterButton.addEventListener('click', () => {
+        renderMedications();
     });
 
     function jsonToXml(json) {
@@ -175,15 +202,106 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return medications;
     }
+});
+printButton.addEventListener('click', () => {
+    // Create a new window for printing
+    const printWindow = window.open('', '', 'height=600,width=800');
+    const html = `
+        <html>
+            <head>
+                <title>Print</title>
+                <style>
+                    @media print {
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: white;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        .container {
+                            width: 100%;
+                            padding: 0;
+                            box-shadow: none;
+                            border: none;
+                        }
+                        h1, h2 {
+                            text-align: center;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 0;
+                        }
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 5px;
+                            text-align: left;
+                        }
+                        th {
+                            background: #f2f2f2;
+                        }
+                        .btn {
+                            display: none;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>약제 리스트</h1>
+                    <h2>유통기한이 남은 약재들</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>약재명</th>
+                                <th>유통 기한</th>
+                                <th>개수</th>
+                            </tr>
+                        </thead>
+                        <tbody id="print-medication-list">
+                        </tbody>
+                    </table>
+                    <h2>유통기한이 지난 약재들</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>약재명</th>
+                                <th>유통 기한</th>
+                                <th>개수</th>
+                            </tr>
+                        </thead>
+                        <tbody id="print-expired-medication-list">
+                        </tbody>
+                    </table>
+                </div>
+            </body>
+        </html>
+    `;
+    printWindow.document.open();
+    printWindow.document.write(html);
+    
+    // Add the data to the print window
+    const medications = JSON.parse(localStorage.getItem('medications')) || [];
+    const printMedicationList = printWindow.document.getElementById('print-medication-list');
+    const printExpiredMedicationList = printWindow.document.getElementById('print-expired-medication-list');
 
-    printButton.addEventListener('click', () => {
-        window.print(); // Invoke the browser's print dialog
-    });
+    medications.forEach(({ medication, expiryDate, quantity }) => {
+        const row = document.createElement('tr');
+        const color = getColorForExpiryDate(expiryDate);
+        row.innerHTML = `
+            <td>${medication}</td>
+            <td>${expiryDate}</td>
+            <td>${quantity}</td>
+        `;
 
-    clearAllButton.addEventListener('click', () => {
-        if (confirm('정말로 전체 약재를 삭제하시겠습니까?')) {
-            localStorage.removeItem('medications');
-            renderMedications(); // Re-render after clearing
+        if (color === 'gray') {
+            printExpiredMedicationList.appendChild(row);
+        } else {
+            printMedicationList.appendChild(row);
         }
     });
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
 });
