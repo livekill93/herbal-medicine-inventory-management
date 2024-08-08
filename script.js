@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const expiredMedicationTableBody = document.getElementById('expired-medication-list');
     const exportButton = document.getElementById('export-xml');
     const importInput = document.getElementById('import-xml');
+    const filterForm = document.getElementById('filter-form');
+    const filterSortSelect = document.getElementById('filter-sort');
+    const printButton = document.getElementById('print-list');
+    const clearAllButton = document.getElementById('clear-all');
 
     // Load medications from local storage
     loadMedications();
@@ -28,15 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const medicationData = { medication, expiryDate, quantity };
         
         // Save to local storage
-        saveMedication(medication, expiryDate, quantity);
+        saveMedication(medicationData);
 
         // Render updated list
         renderMedications();
     }
 
-    function saveMedication(medication, expiryDate, quantity) {
+    function saveMedication(medicationData) {
         let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        medications.push({ medication, expiryDate, quantity });
+        medications.push(medicationData);
         localStorage.setItem('medications', JSON.stringify(medications));
     }
 
@@ -46,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function removeMedication(medication, expiryDate, quantity) {
         let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        medications = medications.filter(m => m.medication !== medication || m.expiryDate !== expiryDate || m.quantity !== quantity);
+        medications = medications.filter(m => !(m.medication === medication && m.expiryDate === expiryDate && m.quantity === quantity));
         localStorage.setItem('medications', JSON.stringify(medications));
         renderMedications(); // Re-render list after removal
     }
@@ -69,13 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeDifference = expiryDateObj - now;
 
         if (timeDifference < 0) {
-            return 'gray'; // Expired
+            return 'expired'; // Expired
         } else if (timeDifference <= oneWeekInMillis) {
-            return 'red'; // One week or less
+            return 'danger'; // One week or less
         } else if (timeDifference <= oneMonthInMillis) {
-            return 'yellow'; // One month or less
+            return 'warning'; // One month or less
         } else {
-            return 'black'; // More than one month
+            return ''; // More than one month
         }
     }
 
@@ -84,14 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
         expiredMedicationTableBody.innerHTML = ''; // Clear existing rows
 
         let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        medications.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate));
+        const sortValue = filterSortSelect.value;
+        
+        if (sortValue === 'name') {
+            medications.sort((a, b) => a.medication.localeCompare(b.medication));
+        } else if (sortValue === 'expiryDate') {
+            medications.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate));
+        }
 
         medications.forEach(({ medication, expiryDate, quantity }) => {
             const row = document.createElement('tr');
-            const color = getColorForExpiryDate(expiryDate);
+            const colorClass = getColorForExpiryDate(expiryDate);
+            row.classList.add(colorClass);
             row.innerHTML = `
-                <td style="color: ${color};">${medication}</td>
-                <td style="color: ${color};">${expiryDate}</td>
+                <td>${medication}</td>
+                <td>${expiryDate}</td>
                 <td>
                     <input type="number" class="quantity-input" value="${quantity}" min="1">
                     <button class="save-button">저장</button>
@@ -108,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateMedicationQuantity(medication, expiryDate, newQuantity);
             });
 
-            if (color === 'gray') {
+            if (colorClass === 'expired') {
                 expiredMedicationTableBody.appendChild(row);
             } else {
                 medicationTableBody.appendChild(row);
@@ -164,4 +175,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return medications;
     }
+
+    printButton.addEventListener('click', () => {
+        window.print(); // Invoke the browser's print dialog
+    });
+
+    clearAllButton.addEventListener('click', () => {
+        if (confirm('정말로 전체 약재를 삭제하시겠습니까?')) {
+            localStorage.removeItem('medications');
+            renderMedications(); // Re-render after clearing
+        }
+    });
 });
