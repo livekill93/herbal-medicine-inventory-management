@@ -81,30 +81,22 @@ button:hover {
     background: #138496;
 }
 
-/* File Buttons Styles */
-#file-buttons {
-    margin-top: 20px; /* Add space above file buttons */
+#import-button {
+    background: #007bff;
 }
 
-#file-buttons .btn {
-    background: #ffc107; /* Set background color */
-    margin: 5px; /* Add margin to separate buttons */
+#import-button:hover {
+    background: #0056b3;
 }
 
-#file-buttons #export-xml {
-    background: #28a745; /* Different color for XML export */
+#export-xml,
+#excel-export {
+    background: #007bff;
 }
 
-#file-buttons #export-xml:hover {
-    background: #218838; /* Darker color on hover for XML export */
-}
-
-#file-buttons #export-excel {
-    background: #007bff; /* Different color for Excel export */
-}
-
-#file-buttons #export-excel:hover {
-    background: #0056b3; /* Darker color on hover for Excel export */
+#export-xml:hover,
+#excel-export:hover {
+    background: #0056b3;
 }
 
 /* Table Styles */
@@ -169,7 +161,7 @@ td .save-button:hover {
 
 /* Warning and Danger Classes */
 .warning {
-    color: #FFD700;
+    color: black; /* Changed from yellow for better visibility */
 }
 
 .danger {
