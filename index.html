@@ -10,6 +10,7 @@
 <body>
     <div class="container">
         <h1>약제 리스트</h1>
+        <!-- 약제 추가 폼 -->
         <form id="medication-form">
             <label for="medication-input">약재명을 기입해주세요:</label>
             <input type="text" id="medication-input" required>
@@ -21,6 +22,7 @@
             <p>유통기한 1개월 전은 <span class="warning">노란색</span>, 1주일 전은 <span class="danger">붉은색</span>, 지난 것은 <span class="expired">회색</span>으로 표시합니다.</p>
         </form>
 
+        <!-- 필터 및 정렬 버튼 -->
         <div id="filter-form">
             <label for="filter-sort">정렬 기준:</label>
             <select id="filter-sort">
@@ -30,6 +32,7 @@
             <button id="apply-filter" class="btn">적용</button>
         </div>
 
+        <!-- 유통기한이 남은 약제 리스트 -->
         <div id="medications-container">
             <h2>유통기한이 남은 약재들</h2>
             <table>
@@ -48,6 +51,7 @@
             </table>
         </div>
 
+        <!-- 유통기한이 지난 약제 리스트 -->
         <div id="expired-medications-container">
             <h2>유통기한이 지난 약재들</h2>
             <table>
@@ -66,6 +70,7 @@
             </table>
         </div>
 
+        <!-- 파일 불러오기 및 추출 버튼 -->
         <div id="export-buttons">
             <button id="import-button" class="btn">XML 파일 불러오기</button>
             <input type="file" id="import-xml" accept=".xml" class="btn" style="display:none;">
