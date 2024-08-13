@@ -1,4 +1,4 @@
-/* General Styles */
+/* 일반 스타일 */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -16,16 +16,16 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     width: 600px;
     text-align: center;
-    max-height: 90vh; /* Adjust to ensure container doesn't exceed viewport height */
-    overflow: auto;   /* Allow scrolling if content overflows */
+    max-height: 90vh; /* 컨테이너가 뷰포트 높이를 초과하지 않도록 조정 */
+    overflow: auto;   /* 내용이 넘칠 경우 스크롤 허용 */
 }
 
-/* Header Styles */
+/* 제목 스타일 */
 h1 {
     margin-bottom: 20px;
 }
 
-/* Form Styles */
+/* 폼 스타일 */
 form {
     display: flex;
     flex-direction: column;
@@ -54,7 +54,7 @@ button:hover {
     background: #218838;
 }
 
-/* Filter and Clear All Button Styles */
+/* 필터 및 정렬 버튼 스타일 */
 #filter-form {
     margin-bottom: 20px;
 }
@@ -73,6 +73,7 @@ button:hover {
     background: #0056b3;
 }
 
+/* 인쇄 버튼 스타일 */
 #print-list {
     background: #17a2b8;
 }
@@ -81,6 +82,7 @@ button:hover {
     background: #138496;
 }
 
+/* 파일 불러오기 버튼 스타일 */
 #import-button {
     background: #007bff;
 }
@@ -89,22 +91,12 @@ button:hover {
     background: #0056b3;
 }
 
-#export-xml,
-#excel-export {
-    background: #007bff;
-}
-
-#export-xml:hover,
-#excel-export:hover {
-    background: #0056b3;
-}
-
-/* Table Styles */
+/* 테이블 스타일 */
 #medications-container, 
 #expired-medications-container {
     margin-top: 20px;
-    max-height: 300px; /* Set a max-height for the scrollable area */
-    overflow-y: auto;  /* Enable vertical scrolling */
+    max-height: 300px; /* 스크롤 가능한 영역의 최대 높이 설정 */
+    overflow-y: auto;  /* 수직 스크롤 활성화 */
 }
 
 table {
@@ -159,9 +151,9 @@ td .save-button:hover {
     background: #0056b3;
 }
 
-/* Warning and Danger Classes */
+/* 경고 및 위험 클래스 */
 .warning {
-    color: black; /* Changed from yellow for better visibility */
+    color: yellow;
 }
 
 .danger {
@@ -172,6 +164,7 @@ td .save-button:hover {
     color: gray;
 }
 
+/* 인쇄 스타일 */
 @media print {
     body {
         font-family: Arial, sans-serif;
@@ -208,6 +201,6 @@ td .save-button:hover {
     }
 
     .btn {
-        display: none; /* Hide buttons during print */
+        display: none; /* 인쇄 중 버튼 숨기기 */
     }
 }
