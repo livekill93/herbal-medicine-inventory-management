@@ -1,159 +1,70 @@
-/* 일반 스타일 */
+/* 기본 스타일 설정 */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: #e0f7fa; /* 밝은 하늘색 배경 */
     margin: 0;
+    padding: 20px;
 }
 
 .container {
-    background: white;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff; /* 컨텐츠 영역 흰색 */
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
     text-align: center;
-    max-height: 90vh; /* 컨테이너가 뷰포트 높이를 초과하지 않도록 조정 */
-    overflow: auto;   /* 내용이 넘칠 경우 스크롤 허용 */
+    margin-bottom: 20px;
 }
 
-/* 제목 스타일 */
+.logo img {
+    max-width: 200px; /* 로고 최대 너비 */
+    height: auto; /* 로고 비율 유지 */
+}
+
 h1 {
+    text-align: center;
+}
+
+form {
     margin-bottom: 20px;
 }
 
-/* 폼 스타일 */
-form {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
+label {
+    display: block;
+    margin-top: 10px;
 }
 
 input[type="text"],
 input[type="date"],
 input[type="number"] {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin: 10px 0;
+    box-sizing: border-box;
 }
 
-button {
-    padding: 10px;
-    background: #28a745;
-    color: white;
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007BFF;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
+    margin: 10px 0;
 }
 
-button:hover {
-    background: #218838;
+.btn:hover {
+    background-color: #0056b3;
 }
 
-/* 필터 및 정렬 버튼 스타일 */
-#filter-form {
-    margin-bottom: 20px;
-}
-
-#filter-form label,
-#filter-form select,
-#filter-form button {
-    margin-bottom: 10px;
-}
-
-#apply-filter {
-    background: #007bff;
-}
-
-#apply-filter:hover {
-    background: #0056b3;
-}
-
-/* 인쇄 버튼 스타일 */
-#print-list {
-    background: #17a2b8;
-}
-
-#print-list:hover {
-    background: #138496;
-}
-
-/* 파일 불러오기 버튼 스타일 */
-#import-button {
-    background: #007bff;
-}
-
-#import-button:hover {
-    background: #0056b3;
-}
-
-/* 테이블 스타일 */
-#medications-container, 
-#expired-medications-container {
-    margin-top: 20px;
-    max-height: 300px; /* 스크롤 가능한 영역의 최대 높이 설정 */
-    overflow-y: auto;  /* 수직 스크롤 활성화 */
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
-}
-
-th {
-    background: #f2f2f2;
-}
-
-th button {
-    background: #dc3545;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 3px;
-}
-
-th button:hover {
-    background: #c82333;
-}
-
-td .delete {
-    color: #ff0000;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-td .quantity-input {
-    width: 50px;
-}
-
-td .save-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    padding: 5px;
-}
-
-td .save-button:hover {
-    background: #0056b3;
-}
-
-/* 경고 및 위험 클래스 */
 .warning {
-    color: yellow;
+    color: #CCCC00;
 }
 
 .danger {
@@ -164,43 +75,40 @@ td .save-button:hover {
     color: gray;
 }
 
-/* 인쇄 스타일 */
-@media print {
-    body {
-        font-family: Arial, sans-serif;
-        background-color: white;
-        margin: 0;
-        padding: 0;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
 
-    .container {
-        width: 100%;
-        padding: 0;
-        box-shadow: none;
-        border: none;
-    }
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
 
-    h1, h2 {
-        text-align: center;
-    }
+th {
+    background-color: #f2f2f2;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 0;
-    }
+input.quantity-input {
+    width: 60px;
+}
 
-    th, td {
-        border: 1px solid #ccc;
-        padding: 5px;
-        text-align: left;
-    }
+.delete {
+    color: red;
+    cursor: pointer;
+}
 
-    th {
-        background: #f2f2f2;
-    }
+#export-buttons {
+    margin-top: 20px;
+    text-align: center;
+}
 
-    .btn {
-        display: none; /* 인쇄 중 버튼 숨기기 */
-    }
+/* 스크롤 가능한 리스트 */
+.scrollable {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
 }
