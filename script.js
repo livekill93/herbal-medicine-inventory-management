@@ -15,93 +15,94 @@ document.addEventListener('DOMContentLoaded', () => {
     const importButton = document.getElementById('import-button');
     const filterSort = document.getElementById('filter-sort');
 
-    // Load medications from local storage
-    function loadMedications() {
-        renderMedications();
-    }
+    // 로컬 스토리지에서 약제 데이터를 불러옴
+    loadMedications();
 
+    // 폼 제출 시 약제 추가
+    medicationForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        addMedication(medicationInput.value, expiryDateInput.value, quantityInput.value);
+        medicationForm.reset();
+    });
+
+    // 약제 추가 함수
     function addMedication(medication, expiryDate, quantity) {
-        const medicationData = { medication, expiryDate, quantity };
-        saveMedication(medicationData);
-        renderMedications();
-    }
-
-    function saveMedication({ medication, expiryDate, quantity }) {
-        let medications = JSON.parse(localStorage.getItem('medications')) || [];
+        const medications = JSON.parse(localStorage.getItem('medications')) || [];
         medications.push({ medication, expiryDate, quantity });
         localStorage.setItem('medications', JSON.stringify(medications));
-    }
-
-    function removeMedication(medication, expiryDate, quantity) {
-        let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        medications = medications.filter(m => !(m.medication === medication && m.expiryDate === expiryDate && m.quantity === quantity));
-        localStorage.setItem('medications', JSON.stringify(medications));
         renderMedications();
     }
 
+    // 약제 데이터 업데이트 함수
     function updateMedicationQuantity(medication, expiryDate, newQuantity) {
-        let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        const medIndex = medications.findIndex(m => m.medication === medication && m.expiryDate === expiryDate);
-        if (medIndex > -1) {
-            medications[medIndex].quantity = newQuantity;
-            localStorage.setItem('medications', JSON.stringify(medications));
-            renderMedications();
-        }
+        const medications = JSON.parse(localStorage.getItem('medications')) || [];
+        const updatedMedications = medications.map(m => {
+            if (m.medication === medication && m.expiryDate === expiryDate) {
+                return { ...m, quantity: newQuantity };
+            }
+            return m;
+        });
+        localStorage.setItem('medications', JSON.stringify(updatedMedications));
+        renderMedications();
     }
 
+    // 약제 삭제 함수
+    function removeMedication(medication, expiryDate) {
+        const medications = JSON.parse(localStorage.getItem('medications')) || [];
+        const updatedMedications = medications.filter(m => !(m.medication === medication && m.expiryDate === expiryDate));
+        localStorage.setItem('medications', JSON.stringify(updatedMedications));
+        renderMedications();
+    }
+
+    // 유통 기한에 따른 색상 클래스 설정 함수
     function getColorForExpiryDate(expiryDate) {
-        const expiryDateObj = new Date(expiryDate);
         const now = new Date();
-        const oneWeekInMillis = 7 * 24 * 60 * 60 * 1000;
-        const oneMonthInMillis = 30 * 24 * 60 * 60 * 1000;
-        const timeDifference = expiryDateObj - now;
-
-        if (timeDifference < 0) {
-            return 'gray';
-        } else if (timeDifference <= oneWeekInMillis) {
-            return 'red';
-        } else {
-            return 'black';
-        }
+        const expiry = new Date(expiryDate);
+        const oneMonth = 1000 * 60 * 60 * 24 * 30;
+        const oneWeek = 1000 * 60 * 60 * 24 * 7;
+        if (expiry < now) return 'expired';
+        if (expiry - now < oneWeek) return 'danger';
+        if (expiry - now < oneMonth) return 'warning';
+        return '';
     }
 
+    // 약제 데이터를 렌더링
     function renderMedications() {
-        const sortBy = filterSort.value; // 선택한 정렬 기준
-        let medications = JSON.parse(localStorage.getItem('medications')) || [];
-        
-        // 정렬 기준에 따라 데이터 정렬
-        if (sortBy === 'name') {
-            medications.sort((a, b) => a.medication.localeCompare(b.medication));
-        } else if (sortBy === 'expiryDate') {
-            medications.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate));
-        }
-
+        const medications = JSON.parse(localStorage.getItem('medications')) || [];
         medicationTableBody.innerHTML = '';
         expiredMedicationTableBody.innerHTML = '';
+        const now = new Date();
+
+        medications.sort((a, b) => {
+            if (filterSort.value === 'name') {
+                return a.medication.localeCompare(b.medication);
+            } else {
+                return new Date(a.expiryDate) - new Date(b.expiryDate);
+            }
+        });
 
         medications.forEach(({ medication, expiryDate, quantity }) => {
             const row = document.createElement('tr');
-            const color = getColorForExpiryDate(expiryDate);
+            const colorClass = getColorForExpiryDate(expiryDate);
+
             row.innerHTML = `
-                <td style="color: ${color};">${medication}</td>
-                <td style="color: ${color};">${expiryDate}</td>
-                <td>
-                    <input type="number" class="quantity-input" value="${quantity}" min="1">
-                    <button class="save-button">저장</button>
-                </td>
+                <td class="${colorClass}">${medication}</td>
+                <td class="${colorClass}">${expiryDate}</td>
+                <td class="${colorClass}"><input type="number" class="quantity-input" value="${quantity}" min="1"></td>
                 <td><span class="delete">삭제</span></td>
             `;
 
-            row.querySelector('.delete').addEventListener('click', () => {
-                removeMedication(medication, expiryDate, quantity);
-            });
-
-            row.querySelector('.save-button').addEventListener('click', () => {
-                const newQuantity = row.querySelector('.quantity-input').value;
+            const quantityInputField = row.querySelector('.quantity-input');
+            quantityInputField.addEventListener('change', (e) => {
+                const newQuantity = e.target.value;
                 updateMedicationQuantity(medication, expiryDate, newQuantity);
             });
 
-            if (color === 'gray') {
+            row.querySelector('.delete').addEventListener('click', () => {
+                removeMedication(medication, expiryDate);
+            });
+
+            if (new Date(expiryDate) < now) {
                 expiredMedicationTableBody.appendChild(row);
             } else {
                 medicationTableBody.appendChild(row);
@@ -109,22 +110,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    applyFilterButton.addEventListener('click', () => {
-        renderMedications();
-    });
-
+    // XML 파일로 저장
     exportButton.addEventListener('click', () => {
         const medications = JSON.parse(localStorage.getItem('medications')) || [];
-        const xmlData = jsonToXml(medications);
-        const blob = new Blob([xmlData], { type: 'application/xml' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'medications.xml';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const xml = jsonToXml(medications);
+        const blob = new Blob([xml], { type: 'application/xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'medications.xml';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     });
 
+    // XML 파일 불러오기
     importButton.addEventListener('click', () => {
         importInput.click();
     });
@@ -133,9 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (event) => {
-                const xmlData = event.target.result;
-                const medications = xmlToJson(xmlData);
+            reader.onload = (e) => {
+                const xml = e.target.result;
+                const medications = xmlToJson(xml);
                 localStorage.setItem('medications', JSON.stringify(medications));
                 renderMedications();
             };
@@ -143,96 +144,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    excelExportButton.addEventListener('click', () => {
-        if (typeof XLSX === 'undefined') {
-            console.error('XLSX library is not loaded.');
-            return;
-        }
-
-        const workbook = XLSX.utils.book_new();
-        const medications = JSON.parse(localStorage.getItem('medications')) || [];
-        const worksheet = XLSX.utils.json_to_sheet(medications);
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Medications');
-        XLSX.writeFile(workbook, 'medications.xlsx');
+    // 정렬 필터 적용
+    applyFilterButton.addEventListener('click', () => {
+        renderMedications();
     });
 
+    // 약제 리스트 인쇄
     printButton.addEventListener('click', () => {
-        const printWindow = window.open('', '', 'height=600,width=800');
-        printWindow.document.open();
-        printWindow.document.write(`
-            <html>
-            <head>
-                <title>Print</title>
-                <style>
-                    table { width: 100%; border-collapse: collapse; }
-                    th, td { border: 1px solid black; padding: 8px; text-align: left; }
-                    th { background: #f2f2f2; }
-                </style>
-            </head>
-            <body>
-                <h1>약제 리스트</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>약제명</th>
-                            <th>유통 기한</th>
-                            <th>개수</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${medicationTableBody.innerHTML}
-                        ${expiredMedicationTableBody.innerHTML}
-                    </tbody>
-                </table>
-            </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.focus();
-        printWindow.print();
+        window.print();
     });
 
+    // 엑셀 파일로 저장
+    excelExportButton.addEventListener('click', () => {
+        const medications = JSON.parse(localStorage.getItem('medications')) || [];
+        const ws = XLSX.utils.json_to_sheet(medications);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Medications');
+        XLSX.writeFile(wb, 'medications.xlsx');
+    });
+
+    // 전체 삭제
     clearAllButton.addEventListener('click', () => {
         localStorage.removeItem('medications');
         renderMedications();
     });
 
+    // 유통기한 지난 약제만 삭제
     clearExpiredButton.addEventListener('click', () => {
         let medications = JSON.parse(localStorage.getItem('medications')) || [];
         const now = new Date();
-        medications = medications.filter(m => new Date(m.expiryDate) > now);
+        medications = medications.filter(m => new Date(m.expiryDate) >= now);
         localStorage.setItem('medications', JSON.stringify(medications));
         renderMedications();
     });
 
+    // JSON 데이터를 XML로 변환
     function jsonToXml(json) {
-        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<medications>\n';
+        let xml = '<medications>';
         json.forEach(({ medication, expiryDate, quantity }) => {
-            xml += `  <medication>\n`;
-            xml += `    <name>${medication}</name>\n`;
-            xml += `    <expiryDate>${expiryDate}</expiryDate>\n`;
-            xml += `    <quantity>${quantity}</quantity>\n`;
-            xml += `  </medication>\n`;
+            xml += `
+                <medication>
+                    <name>${medication}</name>
+                    <expiryDate>${expiryDate}</expiryDate>
+                    <quantity>${quantity}</quantity>
+                </medication>
+            `;
         });
         xml += '</medications>';
         return xml;
     }
 
+    // XML 데이터를 JSON으로 변환
     function xmlToJson(xml) {
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xml, 'text/xml');
-        const medications = [];
+        const xmlDoc = parser.parseFromString(xml, 'application/xml');
         const medicationNodes = xmlDoc.getElementsByTagName('medication');
-        for (let i = 0; i < medicationNodes.length; i++) {
-            const med = medicationNodes[i];
-            const medication = med.getElementsByTagName('name')[0].textContent;
-            const expiryDate = med.getElementsByTagName('expiryDate')[0].textContent;
-            const quantity = med.getElementsByTagName('quantity')[0].textContent;
-            medications.push({ medication, expiryDate, quantity });
-        }
+        const medications = Array.from(medicationNodes).map(node => ({
+            medication: node.getElementsByTagName('name')[0].textContent,
+            expiryDate: node.getElementsByTagName('expiryDate')[0].textContent,
+            quantity: node.getElementsByTagName('quantity')[0].textContent,
+        }));
         return medications;
     }
 
-    // Initial load
-    loadMedications();
+    // 로컬 스토리지에서 약제 데이터를 불러옴
+    function loadMedications() {
+        const medications = JSON.parse(localStorage.getItem('medications')) || [];
+        renderMedications();
+    }
 });
