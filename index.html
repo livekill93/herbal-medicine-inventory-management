@@ -9,6 +9,10 @@
 </head>
 <body>
     <div class="container">
+	 <!-- 로고 영역 -->
+        <div class="logo">
+            <img src="C:\Users\user\Desktop\약제 유통기한 확인 프로그램\신버젼3 - 엑셀파일수정\덤\진짜 최종/logo.JPG" alt="인천한방병원 로고"> <!-- 로고 이미지 경로 -->
+        </div>
         <h1>약제 리스트</h1>
         <!-- 약제 추가 폼 -->
         <form id="medication-form">
@@ -33,7 +37,7 @@
         </div>
 
         <!-- 유통기한이 남은 약제 리스트 -->
-        <div id="medications-container">
+        <div id="medications-container" class="scrollable">
             <h2>유통기한이 남은 약재들</h2>
             <table>
                 <thead>
@@ -52,7 +56,7 @@
         </div>
 
         <!-- 유통기한이 지난 약제 리스트 -->
-        <div id="expired-medications-container">
+        <div id="expired-medications-container" class="scrollable">
             <h2>유통기한이 지난 약재들</h2>
             <table>
                 <thead>
