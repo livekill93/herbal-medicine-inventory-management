@@ -112,3 +112,20 @@ input.quantity-input {
     border: 1px solid #ddd;
     margin-bottom: 20px;
 }
+#filter-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#filter-form label {
+    margin-right: 10px;
+}
+
+#search-input {
+    width: 200px;
+    padding: 8px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
