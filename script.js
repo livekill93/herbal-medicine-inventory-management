@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearExpiredButton = document.getElementById('clear-expired');
     const importButton = document.getElementById('import-button');
     const filterSort = document.getElementById('filter-sort');
+    const searchInput = document.getElementById('search-input'); // New search input
 
     // 로컬 스토리지에서 약제 데이터를 불러옴
     loadMedications();
@@ -72,42 +73,44 @@ document.addEventListener('DOMContentLoaded', () => {
         medicationTableBody.innerHTML = '';
         expiredMedicationTableBody.innerHTML = '';
         const now = new Date();
+        const searchQuery = searchInput.value.toLowerCase(); // Get search query
 
-        medications.sort((a, b) => {
-            if (filterSort.value === 'name') {
-                return a.medication.localeCompare(b.medication);
-            } else {
-                return new Date(a.expiryDate) - new Date(b.expiryDate);
-            }
-        });
+        medications
+            .filter(({ medication }) => medication.toLowerCase().includes(searchQuery)) // Filter by search query
+            .sort((a, b) => {
+                if (filterSort.value === 'name') {
+                    return a.medication.localeCompare(b.medication);
+                } else {
+                    return new Date(a.expiryDate) - new Date(b.expiryDate);
+                }
+            })
+            .forEach(({ medication, expiryDate, quantity }) => {
+                const row = document.createElement('tr');
+                const colorClass = getColorForExpiryDate(expiryDate);
 
-        medications.forEach(({ medication, expiryDate, quantity }) => {
-            const row = document.createElement('tr');
-            const colorClass = getColorForExpiryDate(expiryDate);
+                row.innerHTML = `
+                    <td class="${colorClass}">${medication}</td>
+                    <td class="${colorClass}">${expiryDate}</td>
+                    <td class="${colorClass}"><input type="number" class="quantity-input" value="${quantity}" min="1"></td>
+                    <td><span class="delete">삭제</span></td>
+                `;
 
-            row.innerHTML = `
-                <td class="${colorClass}">${medication}</td>
-                <td class="${colorClass}">${expiryDate}</td>
-                <td class="${colorClass}"><input type="number" class="quantity-input" value="${quantity}" min="1"></td>
-                <td><span class="delete">삭제</span></td>
-            `;
+                const quantityInputField = row.querySelector('.quantity-input');
+                quantityInputField.addEventListener('change', (e) => {
+                    const newQuantity = e.target.value;
+                    updateMedicationQuantity(medication, expiryDate, newQuantity);
+                });
 
-            const quantityInputField = row.querySelector('.quantity-input');
-            quantityInputField.addEventListener('change', (e) => {
-                const newQuantity = e.target.value;
-                updateMedicationQuantity(medication, expiryDate, newQuantity);
+                row.querySelector('.delete').addEventListener('click', () => {
+                    removeMedication(medication, expiryDate);
+                });
+
+                if (new Date(expiryDate) < now) {
+                    expiredMedicationTableBody.appendChild(row);
+                } else {
+                    medicationTableBody.appendChild(row);
+                }
             });
-
-            row.querySelector('.delete').addEventListener('click', () => {
-                removeMedication(medication, expiryDate);
-            });
-
-            if (new Date(expiryDate) < now) {
-                expiredMedicationTableBody.appendChild(row);
-            } else {
-                medicationTableBody.appendChild(row);
-            }
-        });
     }
 
     // XML 파일로 저장
