@@ -11,7 +11,7 @@
     <div class="container">
 	 <!-- 로고 영역 -->
         <div class="logo">
-            <img src="C:\Users\user\Desktop\약제 유통기한 확인 프로그램\신버젼3 - 엑셀파일수정\덤\진짜 최종/logo.JPG" alt="인천한방병원 로고"> <!-- 로고 이미지 경로 -->
+            <img src="C:\Users\user\Desktop\약/logo.JPG" alt="한방병원 로고"> <!-- 로고 이미지 경로 -->
         </div>
         <h1>약제 리스트</h1>
         <!-- 약제 추가 폼 -->
@@ -26,15 +26,18 @@
             <p>유통기한 1개월 전은 <span class="warning">노란색</span>, 1주일 전은 <span class="danger">붉은색</span>, 지난 것은 <span class="expired">회색</span>으로 표시합니다.</p>
         </form>
 
-        <!-- 필터 및 정렬 버튼 -->
-        <div id="filter-form">
-            <label for="filter-sort">정렬 기준:</label>
-            <select id="filter-sort">
-                <option value="name">이름순</option>
-                <option value="expiryDate">유통기한순</option>
-            </select>
-            <button id="apply-filter" class="btn">적용</button>
-        </div>
+<!-- 필터 및 정렬 버튼 -->
+<div id="filter-form">
+    <label for="filter-sort">정렬 기준:</label>
+    <select id="filter-sort">
+        <option value="name">이름순</option>
+        <option value="expiryDate">유통기한순</option>
+    </select>
+    <label for="search-input">검색:</label>
+    <input type="text" id="search-input" placeholder="약제명을 입력하세요">
+    <button id="apply-filter" class="btn">적용</button>
+</div>
+
 
         <!-- 유통기한이 남은 약제 리스트 -->
         <div id="medications-container" class="scrollable">
