@@ -9,9 +9,9 @@
 </head>
 <body>
     <div class="container">
-	 <!-- 로고 영역 -->
+        <!-- 로고 영역 -->
         <div class="logo">
-            <img src="C:\Users\user\Desktop\약/logo.JPG" alt="한방병원 로고"> <!-- 로고 이미지 경로 -->
+            <img src="C:\Users\user\Desktop\약제 유통기한 확인\버젼3\덤\진짜 최종/logo.JPG" alt="로고"> <!-- 로고 이미지 경로 -->
         </div>
         <h1>약제 리스트</h1>
         <!-- 약제 추가 폼 -->
@@ -26,56 +26,59 @@
             <p>유통기한 1개월 전은 <span class="warning">노란색</span>, 1주일 전은 <span class="danger">붉은색</span>, 지난 것은 <span class="expired">회색</span>으로 표시합니다.</p>
         </form>
 
-<!-- 필터 및 정렬 버튼 -->
-<div id="filter-form">
-    <label for="filter-sort">정렬 기준:</label>
-    <select id="filter-sort">
-        <option value="name">이름순</option>
-        <option value="expiryDate">유통기한순</option>
-    </select>
-    <label for="search-input">검색:</label>
-    <input type="text" id="search-input" placeholder="약제명을 입력하세요">
-    <button id="apply-filter" class="btn">적용</button>
-</div>
-
+        <!-- 필터 및 정렬 버튼 -->
+        <div id="filter-form">
+            <label for="filter-sort">정렬 기준:</label>
+            <select id="filter-sort">
+                <option value="name">이름순</option>
+                <option value="expiryDate">유통기한순</option>
+                <option value="quantity">개수순</option>
+            </select>
+            <label for="search-input">검색:</label>
+            <input type="text" id="search-input" placeholder="약제명을 입력하세요">
+            <button id="apply-filter" class="btn">적용</button>
+        </div>
 
         <!-- 유통기한이 남은 약제 리스트 -->
-        <div id="medications-container" class="scrollable">
-            <h2>유통기한이 남은 약재들</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>약재명</th>
-                        <th>유통 기한</th>
-                        <th>개수</th>
-                        <th>
-                            <button id="clear-all" class="btn">전체 삭제</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="medication-list">
-                </tbody>
-            </table>
-        </div>
+<div id="medications-container" class="scrollable">
+    <h2>유통기한이 남은 약재들</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>약재명</th>
+                <th>유통 기한</th>
+                <th>개수</th>
+                <th>
+                    <button id="clear-all" class="btn">전체 삭제</button>
+                </th>
+		<th>비고</th> <!-- 비고 열 추가 -->
+            </tr>
+        </thead>
+        <tbody id="medication-list">
+        </tbody>
+    </table>
+</div>
 
-        <!-- 유통기한이 지난 약제 리스트 -->
-        <div id="expired-medications-container" class="scrollable">
-            <h2>유통기한이 지난 약재들</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>약재명</th>
-                        <th>유통 기한</th>
-                        <th>개수</th>
-                        <th>
-                            <button id="clear-expired" class="btn">전체 삭제</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="expired-medication-list">
-                </tbody>
-            </table>
-        </div>
+<!-- 유통기한이 지난 약제 리스트 -->
+<div id="expired-medications-container" class="scrollable">
+    <h2>유통기한이 지난 약재들</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>약재명</th>
+                <th>유통 기한</th>
+                <th>개수</th>
+                <th>
+                    <button id="clear-expired" class="btn">전체 삭제</button>
+                </th>
+                <th>비고</th> <!-- 비고 열 추가 -->
+            </tr>
+        </thead>
+        <tbody id="expired-medication-list">
+        </tbody>
+    </table>
+</div>
+
 
         <!-- 파일 불러오기 및 추출 버튼 -->
         <div id="export-buttons">
@@ -86,7 +89,24 @@
             <button id="print-list" class="btn">인쇄하기</button>
         </div>
     </div>
+	 <!-- 메모 영역 추가 -->
+	 <nav id="memo-nav1">
+            <h2>약재창고 한약 보관 현황</h2>
+            <button onclick="toggleMemo('memo1', 'toggle-btn1')" id="toggle-btn1">접기 ▲</button>
+            <textarea id="memo1" placeholder="한약 재고를 입력 하세요..."></textarea>
+            <button onclick="saveMemo('memo1')">현황을 저장</button>
+        </nav>
+    </div>
+	<!-- 두 번째 메모창 -->
+        <nav id="memo-nav2">
+            <h2>메모장</h2>
+            <button onclick="toggleMemo('memo2', 'toggle-btn2')" id="toggle-btn2">접기 ▲</button>
+            <textarea id="memo2" placeholder="메모를 입력하세요..."></textarea>
+            <button onclick="saveMemo('memo2')">메모를 저장</button>
+        </nav>
 
-    <script src="script.js"></script>
+    <script src="script.js">
+	
+	</script>
 </body>
 </html>
