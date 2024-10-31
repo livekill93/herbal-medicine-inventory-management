@@ -3,15 +3,16 @@ body {
     font-family: Arial, sans-serif;
     background-color: #e0f7fa; /* 밝은 하늘색 배경 */
     margin: 0;
-    padding: 20px;
+    padding: 30px;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 850px;
+height: auto;
     margin: 0 auto;
     background: #fff; /* 컨텐츠 영역 흰색 */
-    padding: 20px;
-    border-radius: 8px;
+    padding: 30px;
+    border-radius: 9px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -64,7 +65,7 @@ input[type="number"] {
 }
 
 .warning {
-    color: #CCCC00;
+    color: #f89b00;
 }
 
 .danger {
@@ -78,7 +79,7 @@ input[type="number"] {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 35px 0;
 }
 
 th, td {
@@ -92,7 +93,9 @@ th {
 }
 
 input.quantity-input {
-    width: 60px;
+    width: 80px;
+	border: none;
+  outline: none;
 }
 
 .delete {
@@ -107,7 +110,7 @@ input.quantity-input {
 
 /* 스크롤 가능한 리스트 */
 .scrollable {
-    max-height: 300px;
+    max-height: 450px;
     overflow-y: auto;
     border: 1px solid #ddd;
     margin-bottom: 20px;
@@ -115,17 +118,88 @@ input.quantity-input {
 #filter-form {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 #filter-form label {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 #search-input {
     width: 200px;
-    padding: 8px;
-    margin-left: 10px;
+    padding: 9px;
+    margin-left: 20px;
     margin-right: 10px;
 }
+/* 비고 입력란 스타일 */
 
+.remark-input {
+	width: 100px;
+  border: none;
+  outline: none;
+  padding: 12px;
+  background-color: none;
+  font-size: 1rem;
+}
+
+#remark-input:focus {
+  background-color: #e8e8e8;
+}
+
+
+/* 메모창 스타일 */
+nav#memo-nav1 {
+    position: fixed;
+    top: 4%;
+    right: 2%;
+    width: 400px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* 최상위에 배치 */
+}
+
+nav#memo-nav h2 {
+    margin: 0;
+}
+
+
+nav#memo-nav2 {
+    position: fixed;
+    top: 45%;
+    right: 2%;
+    width: 400px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* 최상위에 배치 */
+}
+textarea {
+    width: 91%;
+    height: 170px;
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    margin-top: 10px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 7px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #666;
+}
